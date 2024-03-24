@@ -24,6 +24,7 @@ class Position:
         self.filename = filename
         self.text = text
 
+    # Advance the position in the text
     def advance(self, current_char=None):
         self.idx += 1
         self.col += 1
@@ -32,6 +33,7 @@ class Position:
             self.col = 0
         return self
 
+    # Create a copy of the current position
     def copy(self):
         return Position(self.idx, self.ln, self.col, self.filename, self.text)
 
@@ -58,6 +60,8 @@ TT_RPAREN = 'RPAREN'
 TT_EQUALS = 'EQUALS'
 TT_SEMICOLON = 'SEMICOLON'
 TT_COMMA = 'COMMA'
+TT_QUOTE = 'QUOTE'
+TT_STRING = 'STRING'
 
 # Lexer class to tokenize input text
 class Lexer:
@@ -68,7 +72,7 @@ class Lexer:
         self.current_char = None
         self.advance()
 
-    # Advance the position in the text
+    # Advance the lexer to the next character
     def advance(self):
         self.pos.advance(self.current_char)
         self.current_char = self.text[self.pos.idx] if self.pos.idx < len(self.text) else None
@@ -81,6 +85,8 @@ class Lexer:
                 self.advance()
             elif self.current_char.isdigit():
                 tokens.append(self.make_number())
+            elif self.current_char.isalpha() or self.current_char == '_':
+                tokens.append(self.make_identifier())
             elif self.current_char == '+':
                 tokens.append(Token(TT_PLUS))
                 self.advance()
@@ -108,6 +114,8 @@ class Lexer:
             elif self.current_char == ',':
                 tokens.append(Token(TT_COMMA))
                 self.advance()
+            elif self.current_char == '\'':
+                tokens.append(self.make_string())
             else:
                 pos_start = self.pos.copy()
                 char = self.current_char
@@ -132,6 +140,24 @@ class Lexer:
             return Token(TT_INT, int(num_str))
         else:
             return Token(TT_FLOAT, float(num_str))
+
+    # Parse and create identifier tokens
+    def make_identifier(self):
+        id_str = ''
+        while self.current_char is not None and (self.current_char.isalnum() or self.current_char == '_'):
+            id_str += self.current_char
+            self.advance()
+        return Token(TT_STRING, id_str)
+
+    # Parse and create string tokens
+    def make_string(self):
+        self.advance()
+        string_str = ''
+        while self.current_char is not None and self.current_char != '\'':
+            string_str += self.current_char
+            self.advance()
+        self.advance()
+        return Token(TT_STRING, string_str)
 
 # Function to initialize Lexer and tokenize input text
 def run(filename, text):
