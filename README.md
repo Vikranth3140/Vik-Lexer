@@ -3,6 +3,9 @@ Vik Lexer
 
 VikLang is a simple programming language designed for basic operations such as arithmetic calculations, variable assignment, and string manipulation. This project includes a lexer module that tokenizes VikLang code into meaningful tokens for further processing.
 
+<img width="716" alt="image" src="https://github.com/Vikranth3140/Vik-Lexer/assets/122410275/c770918f-59dc-45c8-a8d0-68d8ea4d4ad2">
+
+
 File Structure
 --------------
 
