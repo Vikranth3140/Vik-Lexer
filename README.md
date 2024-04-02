@@ -78,4 +78,4 @@ Contributions to VikLang are welcome! If you'd like to contribute, please follow
 License
 -------
 
-This project is licensed under the [MIT License](LICENSE).
+This project is licensed under the [MIT License](LICENSE). 
